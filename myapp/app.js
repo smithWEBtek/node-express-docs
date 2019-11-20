@@ -21,33 +21,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.get('/secret', indexRouter);
+app.use(ignoreFavicon);
 
 
-// The following examples illustrate defining simple routes.
-// Respond with Hello World! on the homepage:
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
 
-// Respond with this is one user:
-app.get('/user', function (req, res) {
-  res.send('This is one user!')
-})
 
-// Respond to POST request on the root route (/), the application’s home page:
-app.post('/', function (req, res) {
-  res.send('Got a POST request')
-})
-
-//Respond to a PUT request to the / user route:
-app.put('/user', function (req, res) {
-  res.send('Got a PUT request at /user')
-})
-
-// Respond to a DELETE request to the /user route:
-app.delete('/user', function (req, res) {
-  res.send('Got a DELETE request at /user')
-})
+function ignoreFavicon(req, res, next) {
+  if (req.originalUrl === '/favicon.ico') {
+    res.status(204).json({ nope: true });
+  } else {
+    next();
+  }
+}
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
